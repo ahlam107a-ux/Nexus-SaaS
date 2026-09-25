@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Nexus - لوحة التحكم الاحترافية</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="https://placehold.co/32x32/3b82f6/ffffff?text=SN">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            850: '#1e293b',
+                            900: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        .fade-out {
+            transition: all 0.4s ease-out;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter {
+            animation: modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes modalScaleIn {
+            0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-500 selection:text-white">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white dark:bg-slate-900 border-e border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 z-30 shrink-0">
+            <!-- Sidebar Header -->
+            <div class="h-16 flex items-center justify-between px-5 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/30 shrink-0">
+                        <i class="fa-solid fa-shapes"></i>
+                    </div>
+                    <span class="font-bold text-lg tracking-tight truncate sidebar-text">SaaS Nexus</span>
+                </div>
+                <button id="sidebar-toggle-mobile" class="md:hidden text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <div class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                <div class="px-3 pb-2 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider sidebar-text" data-i18n="menu-main">الرئيسية</div>
+                
+                <a href="#dashboard" onclick="switchTab('dashboard', this)" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400 transition-all">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                    <span class="sidebar-text" data-i18n="nav-dashboard">لوحة التحكم</span>
+                </a>
+                
+                <a href="#users" onclick="switchTab('users', this)" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">
+                    <i class="fa-solid fa-users w-5 text-center"></i>
+                    <span class="sidebar-text" data-i18n="nav-users">المستخدمين والطلبات</span>
+                </a>
+
+                <a href="#analytics" onclick="switchTab('analytics', this)" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                    <span class="sidebar-text" data-i18n="nav-analytics">التحليلات المتقدمة</span>
+                </a>
+
+                <div class="pt-6 px-3 pb-2 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider sidebar-text" data-i18n="menu-system">النظام</div>
+
+                <a href="#settings" onclick="switchTab('settings', this)" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">
+                    <i class="fa-solid fa-gear w-5 text-center"></i>
+                    <span class="sidebar-text" data-i18n="nav-settings">الإعدادات</span>
+                </a>
+
+                <a href="#billing" onclick="switchTab('billing', this)" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">
+                    <i class="fa-solid fa-credit-card w-5 text-center"></i>
+                    <span class="sidebar-text" data-i18n="nav-billing">الاشتراكات والفواتير</span>
+                </a>
+            </div>
+
+            <!-- Sidebar Footer User Profile -->
+            <div class="p-3 border-t border-slate-200 dark:border-slate-800">
+                <div class="flex items-center gap-3 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                    <img src="https://placehold.co/40x40/3b82f6/ffffff?text=AD" alt="Admin" class="w-10 h-10 rounded-full object-cover shrink-0">
+                    <div class="overflow-hidden sidebar-text">
+                        <div class="text-xs font-semibold text-slate-800 dark:text-white truncate">أحمد المنصور</div>
+                        <div class="text-[10px] text-slate-500 dark:text-slate-400 truncate">admin@saasnexus.io</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            
+            <!-- Top Navigation Bar -->
+            <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 sm:px-8 z-20 shrink-0">
+                <div class="flex items-center gap-4">
+                    <!-- Collapse Sidebar Button -->
+                    <button id="sidebar-toggle-btn" class="p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Toggle Sidebar">
+                        <i class="fa-solid fa-bars-staggered text-lg"></i>
+                    </button>
+                    <!-- Search Bar in Header -->
+                    <div class="relative hidden sm:block w-64 md:w-80">
+                        <span class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                        </span>
+                        <input type="text" id="global-search" data-i18n-placeholder="search-placeholder" placeholder="بحث عام في النظام..." class="w-full ps-9 pe-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    </div>
+                </div>
+
+                <!-- Right Header Actions (Theme Toggle, Lang Toggle, Notifications) -->
+                <div class="flex items-center gap-3">
+                    <!-- Language Toggle -->
+                    <button id="lang-toggle-btn" onclick="toggleLanguage()" class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-globe text-blue-500"></i>
+                        <span id="lang-label">EN</span>
+                    </button>
+
+                    <!-- Dark Mode Toggle -->
+                    <button id="theme-toggle-btn" onclick="toggleTheme()" class="w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all" title="Toggle Theme">
+                        <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+                    </button>
+
+                    <!-- Notification Bell with Badge -->
+                    <div class="relative">
+                        <button onclick="showToast('لا توجد إشعارات جديدة حالياً', 'info')" class="w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">
+                            <i class="fa-regular fa-bell text-sm"></i>
+                            <span class="absolute top-2 end-2 w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Page Container -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-6">
+
+                <div id="tab-dashboard" class="tab-content space-y-6">
+                    
+                    <!-- Welcome Banner & Timeframe Controls -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 md:p-8 text-white shadow-xl shadow-blue-500/10">
+                        <div>
+                            <h1 class="text-2xl md:text-3xl font-bold mb-2" data-i18n="welcome-title">أهلاً بك مجدداً، أحمد! 👋</h1>
+                            <p class="text-blue-100 text-sm max-w-xl" data-i18n="welcome-subtitle">إليك نظرة عامة على أداء نظامك ومؤشرات النمو اللحظية للعملاء والاشتراكات اليوم.</p>
+                        </div>
+                        <!-- Timeframe Range Filter Buttons -->
+                        <div class="flex items-center gap-1.5 bg-white/10 backdrop-blur-md p-1.5 rounded-2xl border border-white/20 self-start md:self-auto">
+                            <button onclick="setTimeframe('today', this)" class="timeframe-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-blue-600 shadow-sm transition-all" data-i18n="time-today">اليوم</button>
+                            <button onclick="setTimeframe('week', this)" class="timeframe-btn px-4 py-2 rounded-xl text-xs font-semibold text-white hover:bg-white/10 transition-all" data-i18n="time-week">الأسبوع</button>
+                            <button onclick="setTimeframe('month', this)" class="timeframe-btn px-4 py-2 rounded-xl text-xs font-semibold text-white hover:bg-white/10 transition-all" data-i18n="time-month">الشهر</button>
+                            <button onclick="setTimeframe('year', this)" class="timeframe-btn px-4 py-2 rounded-xl text-xs font-semibold text-white hover:bg-white/10 transition-all" data-i18n="time-year">السنة</button>
+                        </div>
+                    </div>
+
+                    <!-- KPI Cards Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        
+                        <!-- KPI Card 1: Total Revenue -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm font-medium text-slate-500 dark:text-slate-400" data-i18n="kpi-revenue">إجمالي الإيرادات</span>
+                                <div class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-wallet text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="flex items-baseline justify-between">
+                                <h3 id="kpi-revenue-val" class="text-2xl font-bold tracking-tight">$48,250</h3>
+                                <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-1 rounded-lg">
+                                    <i class="fa-solid fa-arrow-trend-up"></i> +12.4%
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- KPI Card 2: Active Users -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm font-medium text-slate-500 dark:text-slate-400" data-i18n="kpi-users">المستخدمين النشطين</span>
+                                <div class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-users text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="flex items-baseline justify-between">
+                                <h3 id="kpi-users-val" class="text-2xl font-bold tracking-tight">3,420</h3>
+                                <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-1 rounded-lg">
+                                    <i class="fa-solid fa-arrow-trend-up"></i> +8.1%
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- KPI Card 3: Pending Orders -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm font-medium text-slate-500 dark:text-slate-400" data-i18n="kpi-orders">الطلبات المعلقة</span>
+                                <div class="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="flex items-baseline justify-between">
+                                <h3 id="kpi-orders-val" class="text-2xl font-bold tracking-tight">148</h3>
+                                <span class="inline-flex items-center gap-1 text-xs font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/50 px-2 py-1 rounded-lg">
+                                    <i class="fa-solid fa-minus"></i> 0.0%
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- KPI Card 4: Conversion Rate -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm font-medium text-slate-500 dark:text-slate-400" data-i18n="kpi-conversion">معدل التحويل</span>
+                                <div class="w-10 h-10 rounded-2xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-chart-pie text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="flex items-baseline justify-between">
+                                <h3 id="kpi-conversion-val" class="text-2xl font-bold tracking-tight">4.8%</h3>
+                                <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-1 rounded-lg">
+                                    <i class="fa-solid fa-arrow-trend-up"></i> +2.3%
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        
+                        <!-- Main Visual Chart Section -->
+                        <div class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <h3 class="font-bold text-lg text-slate-800 dark:text-white" data-i18n="chart-title">تدفق الإيرادات ونمو الاشتراكات</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="chart-subtitle">مقارنة الإيرادات الشهرية للأشهر الستة الأخيرة</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-3 h-3 rounded-full bg-blue-500"></span> <span class="text-xs text-slate-500" data-i18n="legend-revenue">الإيرادات</span>
+                                    <span class="inline-block w-3 h-3 rounded-full bg-indigo-300 ms-2"></span> <span class="text-xs text-slate-500" data-i18n="legend-subscriptions">الاشتراكات</span>
+                                </div>
+                            </div>
+
+                            <!-- Animated Bar Chart container -->
+                            <div id="chart-bars-container" class="h-64 flex items-end justify-between gap-2 sm:gap-4 pt-6 px-2 border-b border-slate-100 dark:border-slate-800">
+                                <!-- Bars will be injected dynamically via JS for live filtering -->
+                            </div>
+                            <div id="chart-labels-container" class="flex justify-between pt-3 px-2 text-xs font-semibold text-slate-400">
+                                <!-- Labels injected via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Progress Bars & Performance Metrics -->
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-1" data-i18n="metrics-title">مؤشرات الأداء والكفاءة</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6" data-i18n="metrics-subtitle">استهلاك الخوادم وأداء النظام العام</p>
+                            </div>
+
+                            <div class="space-y-5">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-2">
+                                        <span class="text-slate-700 dark:text-slate-300" data-i18n="prog-server">استهلاك المعالج والخوادم</span>
+                                        <span class="text-blue-600 dark:text-blue-400">72%</span>
+                                    </div>
+                                    <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-blue-600 rounded-full transition-all duration-1000" style="width: 72%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-2">
+                                        <span class="text-slate-700 dark:text-slate-300" data-i18n="prog-storage">سعة التخزين السحابي</span>
+                                        <span class="text-indigo-600 dark:text-indigo-400">88%</span>
+                                    </div>
+                                    <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-indigo-500 rounded-full transition-all duration-1000" style="width: 88%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-2">
+                                        <span class="text-slate-700 dark:text-slate-300" data-i18n="prog-satisfaction">رضا العملاء (NPS)</span>
+                                        <span class="text-emerald-600 dark:text-emerald-400">96%</span>
+                                    </div>
+                                    <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-emerald-500 rounded-full transition-all duration-1000" style="width: 96%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-2">
+                                        <span class="text-slate-700 dark:text-slate-300" data-i18n="prog-uptime">استقرار الخدمة (Uptime)</span>
+                                        <span class="text-purple-600 dark:text-purple-400">99.9%</span>
+                                    </div>
+                                    <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="h-full bg-purple-500 rounded-full transition-all duration-1000" style="width: 99.9%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
+                                <button onclick="showToast('تم تحديث البيانات بنجاح', 'success')" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline" data-i18n="refresh-metrics">
+                                    <i class="fa-solid fa-rotate-right me-1"></i> تحديث التقارير فوراً
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div id="tab-users" class="tab-content space-y-6 hidden">
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-800 dark:text-white" data-i18n="table-header-title">إدارة المستخدمين والطلبات</h1>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="table-header-subtitle">البحث المباشر، الفلترة حسب الحالة، وتحديث البيانات لحظياً</p>
+                        </div>
+                        <button onclick="openAddModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-lg shadow-blue-500/25 transition-all">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span data-i18n="btn-add-new">إضافة مستخدم أو طلب</span>
+                        </button>
+                    </div>
+
+                    <!-- Filter & Search Toolbar -->
+                    <div class="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <!-- Live Search Input -->
+                        <div class="relative w-full sm:w-80">
+                            <span class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                            </span>
+                            <input type="text" id="table-search" oninput="filterTable()" data-i18n-placeholder="search-table-placeholder" placeholder="بحث بالاسم، البريد أو المعرف..." class="w-full ps-9 pe-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                        </div>
+
+                        <!-- Status Dropdown Filter -->
+                        <div class="flex items-center gap-3 w-full sm:w-auto">
+                            <label class="text-xs font-semibold text-slate-500 shrink-0" data-i18n="filter-status-label">فلترة بالحالة:</label>
+                            <select id="status-filter" onchange="filterTable()" class="w-full sm:w-48 px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                <option value="all" data-i18n="status-all">جميع الحالات</option>
+                                <option value="completed" data-i18n="status-completed">مكتمل</option>
+                                <option value="pending" data-i18n="status-pending">قيد الانتظار</option>
+                                <option value="cancelled" data-i18n="status-cancelled">ملغي</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Data Table -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table id="main-data-table" class="w-full text-start border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                        <th class="py-4 px-6 text-start" data-i18n="th-name">العميل / المستخدم</th>
+                                        <th class="py-4 px-6 text-start" data-i18n="th-email">البريد الإلكتروني</th>
+                                        <th class="py-4 px-6 text-start" data-i18n="th-plan">الباقة / الخدمة</th>
+                                        <th class="py-4 px-6 text-start" data-i18n="th-status">الحالة</th>
+                                        <th class="py-4 px-6 text-start" data-i18n="th-date">تاريخ الانضمام</th>
+                                        <th class="py-4 px-6 text-center" data-i18n="th-actions">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
+                                    <!-- Dynamic rows injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Empty State Notice -->
+                        <div id="empty-table-state" class="hidden p-12 text-center text-slate-400">
+                            <i class="fa-solid fa-folder-open text-4xl mb-3"></i>
+                            <p class="text-base font-semibold" data-i18n="empty-state">لا توجد نتائج مطابقة لبحثك</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="tab-analytics" class="tab-content space-y-6 hidden">
+                    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 text-center space-y-4">
+                        <div class="w-16 h-16 rounded-3xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 flex items-center justify-center mx-auto text-2xl">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h2 class="text-xl font-bold" data-i18n="analytics-page-title">قسم التحليلات والتقارير المتقدمة</h2>
+                        <p class="text-slate-500 max-w-md mx-auto text-sm" data-i18n="analytics-page-subtitle">تتيح لك هذه الواجهة مراقبة الأداء المالي والتقني بشكل عميق مع تصدير البيانات للتقارير الدورية.</p>
+                        <button onclick="showToast('تم تصدير تقرير التحليلات بنجاح', 'success')" class="px-6 py-2.5 rounded-2xl bg-blue-600 text-white font-semibold text-sm shadow-md">
+                            <i class="fa-solid fa-download me-2"></i> <span data-i18n="btn-export">تصدير التقرير الآن</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="tab-settings" class="tab-content space-y-6 hidden">
+                    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6 max-w-2xl">
+                        <h2 class="text-xl font-bold" data-i18n="settings-title">إعدادات النظام العامة</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 mb-2" data-i18n="set-system-name">اسم المنصة / الشركة</label>
+                                <input type="text" value="SaaS Nexus Enterprise" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 mb-2" data-i18n="set-admin-email">بريد المسؤول الرئيسي</label>
+                                <input type="email" value="admin@saasnexus.io" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none">
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+                                <span class="text-sm font-semibold" data-i18n="set-notifications">تفعيل الإشعارات الفورية</span>
+                                <input type="checkbox" checked class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
+                            </div>
+                            <button onclick="showToast('تم حفظ الإعدادات بنجاح', 'success')" class="px-6 py-2.5 rounded-2xl bg-blue-600 text-white font-semibold text-sm">
+                                <span data-i18n="btn-save">حفظ التغييرات</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-billing" class="tab-content space-y-6 hidden">
+                    <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 text-center space-y-4">
+                        <div class="w-16 h-16 rounded-3xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center mx-auto text-2xl">
+                            <i class="fa-solid fa-credit-card"></i>
+                        </div>
+                        <h2 class="text-xl font-bold" data-i18n="billing-page-title">اشتراك المؤسسة الحالي: باقة الأعمال (Enterprise)</h2>
+                        <p class="text-slate-500 max-w-md mx-auto text-sm" data-i18n="billing-page-subtitle">تاريخ التجديد القادم: 15 نوفمبر 2026. الفواتير مدفوعة بالكامل.</p>
+                        <button onclick="showToast('تم استعراض الفاتورة بنجاح', 'info')" class="px-6 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-sm">
+                            <i class="fa-solid fa-file-invoice me-2"></i> <span data-i18n="btn-invoice">عرض الفواتير السابقة</span>
+                        </button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    
+    <!-- View Details Modal -->
+    <div id="details-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden modal-enter">
+            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <h3 class="font-bold text-lg text-slate-800 dark:text-white" data-i18n="modal-details-title">تفاصيل العميل / الطلب</h3>
+                <button onclick="closeDetailsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center gap-4">
+                    <img id="modal-detail-avatar" src="https://placehold.co/60x60/3b82f6/ffffff?text=US" alt="Avatar" class="w-16 h-16 rounded-2xl object-cover">
+                    <div>
+                        <h4 id="modal-detail-name" class="font-bold text-base text-slate-800 dark:text-white">محمد العتيبي</h4>
+                        <p id="modal-detail-email" class="text-xs text-slate-500">mohamed@example.com</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-sm">
+                    <div>
+                        <span class="block text-xs text-slate-400" data-i18n="th-plan">الباقة</span>
+                        <span id="modal-detail-plan" class="font-semibold text-slate-700 dark:text-slate-300">باقة Pro</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-slate-400" data-i18n="th-status">الحالة</span>
+                        <span id="modal-detail-status" class="font-semibold text-emerald-600">مكتمل</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-slate-400" data-i18n="th-date">تاريخ الانضمام</span>
+                        <span id="modal-detail-date" class="font-semibold text-slate-700 dark:text-slate-300">2026/05/12</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-slate-400">معرف المعاملة</span>
+                        <span class="font-semibold text-slate-700 dark:text-slate-300">#TXN-94821</span>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex justify-end">
+                <button onclick="closeDetailsModal()" class="px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs" data-i18n="btn-close">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Item Modal -->
+    <div id="add-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden modal-enter">
+            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <h3 class="font-bold text-lg text-slate-800 dark:text-white" data-i18n="modal-add-title">إضافة عميل أو طلب جديد</h3>
+                <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form id="add-item-form" onsubmit="handleAddNewItem(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1" data-i18n="form-name">اسم العميل</label>
+                    <input type="text" id="new-name" required placeholder="أدخل اسم العميل الكامل..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1" data-i18n="form-email">البريد الإلكتروني</label>
+                    <input type="email" id="new-email" required placeholder="name@company.com" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1" data-i18n="form-plan">الباقة أو الخدمة</label>
+                    <select id="new-plan" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="باقة Pro">باقة Pro</option>
+                        <option value="باقة Enterprise">باقة Enterprise</option>
+                        <option value="باقة Starter">باقة Starter</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1" data-i18n="form-status">حالة الطلب</label>
+                    <select id="new-status" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="completed" data-i18n="status-completed">مكتمل</option>
+                        <option value="pending" data-i18n="status-pending">قيد الانتظار</option>
+                        <option value="cancelled" data-i18n="status-cancelled">ملغي</option>
+                    </select>
+                </div>
+                <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="closeAddModal()" class="px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs" data-i18n="btn-cancel">إلغاء</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-md shadow-blue-500/20" data-i18n="btn-save-item">إضافة العنصر</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-6 start-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <script>
+        const translations = {
+            ar: {
+                'menu-main': 'الرئيسية',
+                'nav-dashboard': 'لوحة التحكم',
+                'nav-users': 'المستخدمين والطلبات',
+                'nav-analytics': 'التحليلات المتقدمة',
+                'menu-system': 'النظام',
+                'nav-settings': 'الإعدادات',
+                'nav-billing': 'الاشتراكات والفواتير',
+                'search-placeholder': 'بحث عام في النظام...',
+                'welcome-title': 'أهلاً بك مجدداً، أحمد! 👋',
+                'welcome-subtitle': 'إليك نظرة عامة على أداء نظامك ومؤشرات النمو اللحظية للعملاء والاشتراكات اليوم.',
+                'time-today': 'اليوم',
+                'time-week': 'الأسبوع',
+                'time-month': 'الشهر',
+                'time-year': 'السنة',
+                'kpi-revenue': 'إجمالي الإيرادات',
+                'kpi-users': 'المستخدمين النشطين',
+                'kpi-orders': 'الطلبات المعلقة',
+                'kpi-conversion': 'معدل التحويل',
+                'chart-title': 'تدفق الإيرادات ونمو الاشتراكات',
+                'chart-subtitle': 'مقارنة الإيرادات الشهرية للأشهر الستة الأخيرة',
+                'legend-revenue': 'الإيرادات',
+                'legend-subscriptions': 'الاشتراكات',
+                'metrics-title': 'مؤشرات الأداء والكفاءة',
+                'metrics-subtitle': 'استهلاك الخوادم وأداء النظام العام',
+                'prog-server': 'استهلاك المعالج والخوادم',
+                'prog-storage': 'سعة التخزين السحابي',
+                'prog-satisfaction': 'رضا العملاء (NPS)',
+                'prog-uptime': 'استقرار الخدمة (Uptime)',
+                'refresh-metrics': 'تحديث التقارير فوراً',
+                'table-header-title': 'إدارة المستخدمين والطلبات',
+                'table-header-subtitle': 'البحث المباشر، الفلترة حسب الحالة، وتحديث البيانات لحظياً',
+                'btn-add-new': 'إضافة مستخدم أو طلب',
+                'search-table-placeholder': 'بحث بالاسم، البريد أو المعرف...',
+                'filter-status-label': 'فلترة بالحالة:',
+                'status-all': 'جميع الحالات',
+                'status-completed': 'مكتمل',
+                'status-pending': 'قيد الانتظار',
+                'status-cancelled': 'ملغي',
+                'th-name': 'العميل / المستخدم',
+                'th-email': 'البريد الإلكتروني',
+                'th-plan': 'الباقة / الخدمة',
+                'th-status': 'الحالة',
+                'th-date': 'تاريخ الانضمام',
+                'th-actions': 'الإجراءات',
+                'empty-state': 'لا توجد نتائج مطابقة لبحثك',
+                'analytics-page-title': 'قسم التحليلات والتقارير المتقدمة',
+                'analytics-page-subtitle': 'تتيح لك هذه الواجهة مراقبة الأداء المالي والتقني بشكل عميق مع تصدير البيانات للتقارير الدورية.',
+                'btn-export': 'تصدير التقرير الآن',
+                'settings-title': 'إعدادات النظام العامة',
+                'set-system-name': 'اسم المنصة / الشركة',
+                'set-admin-email': 'بريد المسؤول الرئيسي',
+                'set-notifications': 'تفعيل الإشعارات الفورية',
+                'btn-save': 'حفظ التغييرات',
+                'billing-page-title': 'اشتراك المؤسسة الحالي: باقة الأعمال (Enterprise)',
+                'billing-page-subtitle': 'تاريخ التجديد القادم: 15 نوفمبر 2026. الفواتير مدفوعة بالكامل.',
+                'btn-invoice': 'عرض الفواتير السابقة',
+                'modal-details-title': 'تفاصيل العميل / الطلب',
+                'modal-add-title': 'إضافة عميل أو طلب جديد',
+                'form-name': 'اسم العميل',
+                'form-email': 'البريد الإلكتروني',
+                'form-plan': 'الباقة أو الخدمة',
+                'form-status': 'حالة الطلب',
+                'btn-cancel': 'إغلاق / إلغاء',
+                'btn-save-item': 'إضافة العنصر',
+                'action-view': 'عرض التفاصيل',
+                'action-delete': 'حذف العنصر'
+            },
+            en: {
+                'menu-main': 'Main',
+                'nav-dashboard': 'Dashboard',
+                'nav-users': 'Users & Orders',
+                'nav-analytics': 'Advanced Analytics',
+                'menu-system': 'System',
+                'nav-settings': 'Settings',
+                'nav-billing': 'Billing & Subs',
+                'search-placeholder': 'Global search...',
+                'welcome-title': 'Welcome back, Ahmed! 👋',
+                'welcome-subtitle': 'Here is an overview of your system performance and live client growth metrics today.',
+                'time-today': 'Today',
+                'time-week': 'Week',
+                'time-month': 'Month',
+                'time-year': 'Year',
+                'kpi-revenue': 'Total Revenue',
+                'kpi-users': 'Active Users',
+                'kpi-orders': 'Pending Orders',
+                'kpi-conversion': 'Conversion Rate',
+                'chart-title': 'Revenue Flow & Subscription Growth',
+                'chart-subtitle': 'Comparing monthly revenue for the last 6 months',
+                'legend-revenue': 'Revenue',
+                'legend-subscriptions': 'Subscriptions',
+                'metrics-title': 'Performance & Efficiency Metrics',
+                'metrics-subtitle': 'Server utilization and overall system status',
+                'prog-server': 'CPU & Server Load',
+                'prog-storage': 'Cloud Storage Capacity',
+                'prog-satisfaction': 'Customer Satisfaction (NPS)',
+                'prog-uptime': 'Service Uptime',
+                'refresh-metrics': 'Refresh Reports Now',
+                'table-header-title': 'Users & Orders Management',
+                'table-header-subtitle': 'Live search, status filtering, and real-time updates',
+                'btn-add-new': 'Add User or Order',
+                'search-table-placeholder': 'Search by name, email or ID...',
+                'filter-status-label': 'Filter Status:',
+                'status-all': 'All Statuses',
+                'status-completed': 'Completed',
+                'status-pending': 'Pending',
+                'status-cancelled': 'Cancelled',
+                'th-name': 'Client / User',
+                'th-email': 'Email Address',
+                'th-plan': 'Plan / Service',
+                'th-status': 'Status',
+                'th-date': 'Join Date',
+                'th-actions': 'Actions',
+                'empty-state': 'No matching results found',
+                'analytics-page-title': 'Advanced Analytics & Reports',
+                'analytics-page-subtitle': 'Monitor financial and technical performance in depth and export periodic reports.',
+                'btn-export': 'Export Report Now',
+                'settings-title': 'General System Settings',
+                'set-system-name': 'Platform / Company Name',
+                'set-admin-email': 'Main Administrator Email',
+                'set-notifications': 'Enable Push Notifications',
+                'btn-save': 'Save Changes',
+                'billing-page-title': 'Current Enterprise Subscription: Business Plan',
+                'billing-page-subtitle': 'Next renewal date: November 15, 2026. Invoices fully paid.',
+                'btn-invoice': 'View Previous Invoices',
+                'modal-details-title': 'Client / Order Details',
+                'modal-add-title': 'Add New Client or Order',
+                'form-name': 'Client Name',
+                'form-email': 'Email Address',
+                'form-plan': 'Plan or Service',
+                'form-status': 'Order Status',
+                'btn-cancel': 'Cancel',
+                'btn-save-item': 'Add Item',
+                'action-view': 'View Details',
+                'action-delete': 'Delete Item'
+            }
+        };
+
+        let currentLang = 'ar';
+
+        let usersData = [
+            { id: 1, name: 'محمد العتيبي', email: 'mohamed@example.com', plan: 'باقة Pro', status: 'completed', date: '2026/05/12', avatar: 'https://placehold.co/40x40/3b82f6/ffffff?text=M' },
+            { id: 2, name: 'سارة الأحمد', email: 'sara.ahmed@company.io', plan: 'باقة Enterprise', status: 'pending', date: '2026/05/10', avatar: 'https://placehold.co/40x40/10b981/ffffff?text=S' },
+            { id: 3, name: 'خالد بن سلطان', email: 'khaled@techflow.com', plan: 'باقة Starter', status: 'completed', date: '2026/05/08', avatar: 'https://placehold.co/40x40/f59e0b/ffffff?text=K' },
+            { id: 4, name: 'فاطمة الزهراء', email: 'fatima@startup.net', plan: 'باقة Pro', status: 'cancelled', date: '2026/05/04', avatar: 'https://placehold.co/40x40/ef4444/ffffff?text=F' },
+            { id: 5, name: 'عبدالله الشمري', email: 'abdullah@cloudhub.sa', plan: 'باقة Enterprise', status: 'completed', date: '2026/05/01', avatar: 'https://placehold.co/40x40/8b5cf6/ffffff?text=A' }
+        ];
+
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            if (htmlEl.classList.contains('dark')) {
+                htmlEl.classList.remove('dark');
+                htmlEl.classList.add('light');
+                themeIcon.className = 'fa-solid fa-moon text-sm';
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlEl.classList.remove('light');
+                htmlEl.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-sun text-sm text-yellow-400';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            const htmlEl = document.documentElement;
+            htmlEl.setAttribute('lang', currentLang);
+            htmlEl.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+            document.getElementById('lang-label').innerText = currentLang === 'ar' ? 'EN' : 'AR';
+
+            // Update all translations
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerText = translations[currentLang][key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[currentLang][key]) {
+                    el.placeholder = translations[currentLang][key];
+                }
+            });
+
+            renderTable();
+            renderChart('month');
+            showToast(currentLang === 'ar' ? 'تم التبديل إلى اللغة العربية' : 'Switched to English', 'info');
+        }
+
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+        let sidebarExpanded = true;
+
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebarExpanded = !sidebarExpanded;
+            if (!sidebarExpanded) {
+                sidebar.classList.add('w-20');
+                sidebar.classList.remove('w-64');
+                document.querySelectorAll('.sidebar-text').forEach(el => el.classList.add('hidden'));
+            } else {
+                sidebar.classList.remove('w-20');
+                sidebar.classList.add('w-64');
+                document.querySelectorAll('.sidebar-text').forEach(el => el.classList.remove('hidden'));
+            }
+        });
+
+        // Mobile sidebar close button
+        document.getElementById('sidebar-toggle-mobile').addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+        });
+
+        function switchTab(tabId, clickedEl) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('bg-blue-50', 'text-blue-600', 'dark:bg-blue-950/50', 'dark:text-blue-400');
+                item.classList.add('text-slate-600', 'dark:text-slate-400');
+            });
+            clickedEl.classList.add('bg-blue-50', 'text-blue-600', 'dark:bg-blue-950/50', 'dark:text-blue-400');
+            clickedEl.classList.remove('text-slate-600', 'dark:text-slate-400');
+        }
+
+        function setTimeframe(range, btnEl) {
+            document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                btn.className = 'timeframe-btn px-4 py-2 rounded-xl text-xs font-semibold text-white hover:bg-white/10 transition-all';
+            });
+            btnEl.className = 'timeframe-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-blue-600 shadow-sm transition-all';
+
+            // Update KPI values dynamically
+            const revVal = document.getElementById('kpi-revenue-val');
+            const usersVal = document.getElementById('kpi-users-val');
+            const ordersVal = document.getElementById('kpi-orders-val');
+            const convVal = document.getElementById('kpi-conversion-val');
+
+            if (range === 'today') {
+                revVal.innerText = '$3,420';
+                usersVal.innerText = '320';
+                ordersVal.innerText = '14';
+                convVal.innerText = '5.2%';
+            } else if (range === 'week') {
+                revVal.innerText = '$14,890';
+                usersVal.innerText = '1,240';
+                ordersVal.innerText = '52';
+                convVal.innerText = '4.6%';
+            } else if (range === 'month') {
+                revVal.innerText = '$48,250';
+                usersVal.innerText = '3,420';
+                ordersVal.innerText = '148';
+                convVal.innerText = '4.8%';
+            } else if (range === 'year') {
+                revVal.innerText = '$584,200';
+                usersVal.innerText = '24,500';
+                ordersVal.innerText = '1,210';
+                convVal.innerText = '5.1%';
+            }
+
+            renderChart(range);
+            showToast(currentLang === 'ar' ? 'تم تحديث بيانات الفترة الزمنية بنجاح' : 'Timeframe data updated successfully', 'success');
+        }
+
+        function renderChart(range) {
+            const chartContainer = document.getElementById('chart-bars-container');
+            const labelsContainer = document.getElementById('chart-labels-container');
+            chartContainer.innerHTML = '';
+            labelsContainer.innerHTML = '';
+
+            let dataSets = {
+                today: { vals: [40, 65, 80, 45, 90, 75], labels: ['12 AM', '4 AM', '8 AM', '12 PM', '4 PM', '8 PM'] },
+                week: { vals: [55, 70, 45, 90, 85, 95], labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'] },
+                month: { vals: [60, 80, 50, 90, 75, 88], labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'] },
+                year: { vals: [45, 60, 75, 85, 90, 100], labels: ['2021', '2022', '2023', '2024', '2025', '2026'] }
+            };
+
+            const currentSet = dataSets[range] || dataSets['month'];
+
+            currentSet.vals.forEach((val, index) => {
+                const barWrapper = document.createElement('div');
+                barWrapper.className = 'flex-1 flex flex-col items-center h-full justify-end group cursor-pointer';
+                
+                const bar = document.createElement('div');
+                bar.className = 'w-full max-w-[40px] bg-gradient-to-t from-blue-600 to-indigo-500 rounded-2xl transition-all duration-700 group-hover:brightness-110';
+                bar.style.height = '0%';
+                
+                setTimeout(() => {
+                    bar.style.height = `${val}%`;
+                }, 50 * index);
+
+                barWrapper.appendChild(bar);
+                chartContainer.appendChild(barWrapper);
+
+                const label = document.createElement('span');
+                label.className = 'flex-1 text-center truncate';
+                label.innerText = currentSet.labels[index];
+                labelsContainer.appendChild(label);
+            });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            const emptyState = document.getElementById('empty-table-state');
+            tbody.innerHTML = '';
+
+            const searchTerm = document.getElementById('table-search').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+
+            const filtered = usersData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm) || item.email.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.id = `row-${item.id}`;
+                tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors';
+
+                let statusBadge = '';
+                if (item.status === 'completed') {
+                    statusBadge = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${currentLang === 'ar' ? 'مكتمل' : 'Completed'}</span>`;
+                } else if (item.status === 'pending') {
+                    statusBadge = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> ${currentLang === 'ar' ? 'قيد الانتظار' : 'Pending'}</span>`;
+                } else {
+                    statusBadge = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> ${currentLang === 'ar' ? 'ملغي' : 'Cancelled'}</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-4 px-6 flex items-center gap-3">
+                        <img src="${item.avatar}" alt="Avatar" class="w-9 h-9 rounded-xl object-cover shrink-0">
+                        <span class="font-semibold text-slate-800 dark:text-white truncate">${item.name}</span>
+                    </td>
+                    <td class="py-4 px-6 text-slate-500 dark:text-slate-400">${item.email}</td>
+                    <td class="py-4 px-6 font-medium text-slate-700 dark:text-slate-300">${item.plan}</td>
+                    <td class="py-4 px-6">${statusBadge}</td>
+                    <td class="py-4 px-6 text-slate-500 dark:text-slate-400">${item.date}</td>
+                    <td class="py-4 px-6 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="openDetailsModal(${item.id})" class="p-2 rounded-xl text-blue-600 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 transition-colors" title="${currentLang === 'ar' ? 'عرض التفاصيل' : 'View Details'}">
+                                <i class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                            <button onclick="deleteRow(${item.id})" class="p-2 rounded-xl text-red-600 bg-red-50 dark:bg-red-950/50 hover:bg-red-100 transition-colors" title="${currentLang === 'ar' ? 'حذف العنصر' : 'Delete'}">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterTable() {
+            renderTable();
+        }
+
+        function deleteRow(id) {
+            const row = document.getElementById(`row-${id}`);
+            if (row) {
+                row.classList.add('fade-out');
+                setTimeout(() => {
+                    usersData = usersData.filter(item => item.id !== id);
+                    renderTable();
+                    showToast(currentLang === 'ar' ? 'تم حذف العنصر بنجاح من النظام' : 'Item deleted successfully', 'success');
+                }, 400);
+            }
+        }
+
+        function openDetailsModal(id) {
+            const item = usersData.find(u => u.id === id);
+            if (!item) return;
+
+            document.getElementById('modal-detail-name').innerText = item.name;
+            document.getElementById('modal-detail-email').innerText = item.email;
+            document.getElementById('modal-detail-plan').innerText = item.plan;
+            document.getElementById('modal-detail-status').innerText = item.status === 'completed' ? (currentLang === 'ar' ? 'مكتمل' : 'Completed') : (currentLang === 'ar' ? 'قيد الانتظار' : 'Pending');
+            document.getElementById('modal-detail-date').innerText = item.date;
+            document.getElementById('modal-detail-avatar').src = item.avatar;
+
+            const modal = document.getElementById('details-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById('details-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function openAddModal() {
+            const modal = document.getElementById('add-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeAddModal() {
+            const modal = document.getElementById('add-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.getElementById('add-item-form').reset();
+        }
+
+        function handleAddNewItem(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-name').value;
+            const email = document.getElementById('new-email').value;
+            const plan = document.getElementById('new-plan').value;
+            const status = document.getElementById('new-status').value;
+
+            const newItem = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                plan: plan,
+                status: status,
+                date: new Date().toISOString().slice(0, 10).replace(/-/g, '/'),
+                avatar: `https://placehold.co/40x40/3b82f6/ffffff?text=${name.charAt(0)}`
+            };
+
+            usersData.unshift(newItem);
+            renderTable();
+            closeAddModal();
+            showToast(currentLang === 'ar' ? 'تمت إضافة العميل الجديد بنجاح!' : 'New client added successfully!', 'success');
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-slate-900 text-white dark:bg-slate-800';
+            let icon = 'fa-circle-check text-emerald-400';
+            if (type === 'success') {
+                icon = 'fa-circle-check text-emerald-400';
+            } else if (type === 'info') {
+                icon = 'fa-circle-info text-blue-400';
+            }
+
+            toast.className = `flex items-center gap-3 px-5 py-3 rounded-2xl shadow-xl ${bgClass} pointer-events-auto transform translate-y-4 opacity-0 transition-all duration-300 border border-slate-700`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-lg"></i>
+                <span class="text-xs font-bold">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        window.onload = function () {
+            renderChart('month');
+            renderTable();
+        };
+    </script>
+</body>
+</html>
